@@ -6,6 +6,16 @@ const mysql = require("mysql2");
 const bcrypt = require("bcrypt");
 const { response } = require("express");
 const saltRounds = 10;
+const favicon = require('express-favicon');
+const path = require('path');
+const port = process.env.PORT || 8080;
+
+if (process.env.NODE_env === "production"){
+    app.use(express.static("../client/build"));
+    app.get("*", (req, res) =>{
+        req.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
+    });
+};
 
 const db = mysql.createConnection({
 host: "localhost",
@@ -141,6 +151,7 @@ app.put("/api/comment", (req, res) => {
  
 
 
-app.listen(3001, () =>{
+app.listen(port, (err) =>{
+    if (err) return console.log(err);
 console.log("running on port 3001");
 });
