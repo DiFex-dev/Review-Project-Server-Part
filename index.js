@@ -8,7 +8,12 @@ const { response } = require("express");
 const saltRounds = 10;
 const favicon = require('express-favicon');
 const path = require('path');
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3306;
+
+app.use(express.json({ extended: true }))
+app.use("/images", express.static(path.join(__dirname, "images")))
+
+app.use("/api", require("./routes/upload.route"))
 
 if (process.env.NODE_env === "production"){
     app.use(express.static("../client/build"));
@@ -18,10 +23,10 @@ if (process.env.NODE_env === "production"){
 };
 
 const db = mysql.createConnection({
-host: "localhost",
-user: "root",
-password: "Vlad2002Vlad",
-database: "reviews",
+host: "us-cdbr-east-04.cleardb.com",
+user: "b392b29aacaa81",
+password: "e1760bb1",
+database: "heroku_b4a57fd13872a52",
 });
 app.use(cors());
 app.use(express.json());
@@ -153,5 +158,5 @@ app.put("/api/comment", (req, res) => {
 
 app.listen(port, (err) =>{
     if (err) return console.log(err);
-console.log("running on port 3001");
+console.log("running on port " + port);
 });
