@@ -8,7 +8,7 @@ const { response } = require("express");
 const saltRounds = 10;
 const favicon = require('express-favicon');
 const path = require('path');
-const port = process.env.PORT || 3306;
+const port = process.env.PORT || 3001;
 
 app.use(express.json({ extended: true }))
 app.use("/images", express.static(path.join(__dirname, "images")))
@@ -80,7 +80,7 @@ app.post("/login", (req,res) =>{
     const username = req.body.username
     const password = req.body.password
 
-    db.query("SELECT * FROM username = ?",
+    db.query("SELECT * FROM users WHERE username = ?",
     username,
     (err, result) =>{
         if(err) {
@@ -120,38 +120,39 @@ app.put("/api/update", (req, res) =>{
 });
 
 app.put("/api/comment", (req, res) => {
-    const comm = req.body.reviewComment;
-    const namecomm = req.body.name;
-    const sqlCommenting = "UPDATE reviewcomm SET reviewComment = ? WHERE name = ?";
-    db.query(sqlCommenting, [comm, namecomm], (epp,repult) =>{
+    const reviewComment = req.body.comment;
+    const reviewName = req.body.reviewName;
+    const sqlCommenting = "INSERT INTO reviewcomm (reviewComment, reviewName) VALUES(?, ?)";
+    db.query(sqlCommenting, [reviewComment, reviewName], (epp,repult) =>{
         if (epp) console.log(epp)
         console.log(repult);
     });
 });
 
-/*const reviewbdPromise = new Promise((resolve,reject) =>{
-    connection.query(sql2, function(err, cResult) {
-       if (err) return reject( err);
-       resolve( cResult.insertId);
-   });
- })
+// const reviewbdPromise = new Promise((resolve,reject) =>{
+//     connection.query(sql2, function(err, cResult) {
+//        if (err) return reject( err);
+//        resolve( cResult.insertId);
+//    });
+//  })
 
- const reviewcommPromise = new Promise((resolve,reject) =>{
-     connection.query(sql3, function(err, aResult) {
-         if (err) return reject( err);
-         resolve(aResult.insertId);
-     });
- })
- Pomise.all([reviewbdPromise,reviewcommPromise])
- .then(([reviewid,commid]) =>{
-    var sql4 = "UPDATE address set reviewid = " + reviewid + " WHERE (commid = " + commid + ")";
+//  const reviewcommPromise = new Promise((resolve,reject) =>{
+//      connection.query(sql3, function(err, aResult) {
+//          if (err) return reject( err);
+//          resolve(aResult.insertId);
+//      });
+//  })
+//  Pomise.all([reviewbdPromise,reviewcommPromise])
+//  .then(([reviewid,commid]) =>{
+//     var sql4 = "UPDATE address set reviewid = " + reviewid + " WHERE (commid = " + commid + ")";
 
-   connection.query(sql4, function(err, uRes) {
-       console.log("Address updated " + commid + " " + reviewid);
-   });
+//    connection.query(sql4, function(err, uRes) {
+//        console.log("Errors: "+err)
+//        console.log("Ures " + uRes)
+//        console.log("Address updated " + commid + " " + reviewid);
+//    });
  
- })
- */
+//  })
 
  
 
